@@ -1,23 +1,26 @@
 #!/usr/bin/php
 <?php
 
-require_once('class/yt_stat.inc.php');
-require_once('config.inc.php');
+require_once 'vendor/autoload.php';
+
+use youtube\classes\Youtube;
+use youtube\classes\HtmlDom;
+use youtube\classes\HtmlFetch;
 
 try {
 
-	$url=(empty($argv[1])) ? NULL : trim($argv[1]);
+    $url = (empty($argv[1])) ? null : trim($argv[1]);
 
-	if (is_null($url)) throw new Exception('No video URL provided');
+    if (is_null($url)) throw new Exception('video URL not provided');
 
-	$obj=new yt_stat($url);
+    $youtube = new Youtube(new HtmlFetch(), new HtmlDom());
 
-	print_r($obj->__info);
+    $youtube->getVideo($url);
 
-} catch (Exception $e) {
+    print_r($youtube->videoData());
 
-    print "Exception: ".$e->getMessage()."!\n";
+} catch (Exception $err) {
+
+    print "Exception: " . $err->getMessage() . "!\n";
 
 }
-
-?>
